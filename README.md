@@ -26,12 +26,19 @@ https://ggapp.io/
 Subsystems
 
 Neo Hang - Login Credentials, Password/Username/Profile database
+
 Features: Save password option, change password, change username
+
 Alex Segura - Community Features, Forums, Reviews
+
 Block/unblock certain comments, user titles, average playtime
+
 Yousif Mehsen - Video Game Database
+
 API that lists video games, genre selector, date filter
+
 Rabi Baqtar - Search Engine
+
 Keyword Filter, Detail Recognization, Tags
 
 Revenue Model
