@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Archivo — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="Styles.css" />
+</head>
+<body class="login-body">
+  <main class="login-card">
+    <h1 class="title">Hello <span>user..</span><span class="blink-dot">.</span></h1>
+
+    <form id="loginForm" class="login-horizontal">
+      <input id="loginUser" class="input" placeholder="Username" required />
+      <input id="loginPass" class="input" type="password" placeholder="Password" required />
+      <button id="loginBtn" class="btn">Login</button>
+    </form>
+
+    <p id="msg" class="msg"></p>
+    <p>Lacking an account? <a href="register.html">Register</a>.</p>
+  </main>
+
+  <script src="auth.js"></script>
+</body>
+</html>
