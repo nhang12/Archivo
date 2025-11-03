@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Archivo — Dashboard</title>
+</head>
+<body>
+  <nav>
+    <h1>Dashboard</h1>
+    <span id="userDisplay"></span>
+    <button id="logoutBtn">Logout</button>
+  </nav>
+
+  <main>
+    <h2>Welcome to your Game Catalog, <span id="name"></span>!</h2>
+    <p>This is your personalized dashboard.</p>
+  </main>
+
+  <script src="auth.js"></script>
+  <script>
+    requireAuth(); // protect page
+    const user = currentUser();
+    document.getElementById("userDisplay").textContent = "Logged in as " + user;
+    document.getElementById("name").textContent = user;
+    document.getElementById("logoutBtn").onclick = logout;
+  </script>
+</body>
+</html>

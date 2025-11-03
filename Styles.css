@@ -1,0 +1,136 @@
+/* BACKGROUND */
+.login-body {
+  height: 100vh;
+  width: 100vw;
+
+  /*  Use your uploaded image file name below  */
+  background: url("wave.gif") center center / cover no-repeat fixed;
+
+  /* Fallback gradient if image fails to load */
+  background-color: #0a0c12;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #e6f6ff;
+  font-family: "Rajdhani", "Orbitron", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Optional semi-transparent overlay for contrast */
+.login-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Make sure the login box appears above the background */
+.login-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.55); /* tweak opacity for brightness */
+  padding: 12px 14px;
+  border-radius: 14px solid black ;
+  border-top-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+@keyframes moveWave {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+.login-body {
+  animation: moveWave 40s linear infinite alternate;
+}
+
+/* TITLE */
+.title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.6rem;
+  margin-bottom: 25px;
+  color: #dadada;
+}
+.title span {
+  color: #ffffff;
+  text-shadow: 0 0 12px #e6fcff;
+}
+
+.blink-dot {
+  display: inline-block;
+  color: #00e5ff;
+  text-shadow: 0 0 8px #00e5ff;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+/* HORIZONTAL LOGIN FORM */
+.login-horizontal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.input {
+  flex: 1 1 30%;
+  min-width: 160px;
+  padding: 12px 14px;
+  background: #151515;
+  border: 1px solid #ffffff;
+  border-radius: 6px;
+  color: #e8f9ff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.3s ease;
+}
+.input:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 8px #e5e5e5;
+}
+
+.btn {
+  flex: 0 0 auto;
+  background: linear-gradient(90deg, #d1d1d1, #4a4a4a);
+  border: none;
+  color: #fff;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  letter-spacing: 1px;
+}
+.btn:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 10px #d0d0d0;
+}
+
+/* LINKS & MESSAGE */
+a {
+  color: #dbdbdb;
+  text-decoration: none;
+  transition: 0.3s ease;
+  font-weight: 500;
+}
+a:hover {
+  text-shadow: 0 0 6px #e8e8e8;
+}
+.msg {
+  margin-top: 15px;
+  color: #ff5c5c;
+  min-height: 20px;
+  font-size: 0.9rem;
+}
