@@ -134,3 +134,14 @@ a:hover {
   min-height: 20px;
   font-size: 0.9rem;
 }
+/* Allow scrolling for catalog page */
+.login-body {
+  align-items: flex-start !important;
+  overflow-y: auto !important;
+  padding-top: 40px;
+}
+
+.login-card {
+  width: 90%;
+  max-width: 1100px;
+}
