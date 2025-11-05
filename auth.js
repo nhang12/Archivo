@@ -63,7 +63,7 @@ if (loginForm) {
 
     if (found) {
       setSession(u);
-      window.location.href = "dashboard.html"; // ✅ redirects properly now
+      window.location.href = "catalogSystem.html"; // ✅ redirects properly now
     } else {
       msg.textContent = "Invalid username or password.";
     }

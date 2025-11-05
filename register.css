@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BACKGROUND */
+body {
+  height: 100vh;
+  width: 100vw;
+  background: url("wave.gif") center center / cover no-repeat fixed;
+  background-color: #0a0c12;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #e6f6ff;
+  font-family: "Rajdhani", "Orbitron", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* DARK OVERLAY for contrast */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 0;
+}
+
+/* CARD CONTAINER */
+.register-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(15, 18, 22, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 40px 50px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+/* TITLE */
+h1 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.6rem;
+  color: #dadada;
+  margin-bottom: 25px;
+  text-shadow: 0 0 12px #e6fcff;
+}
+
+/* INPUT FIELDS */
+input {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 12px 0;
+  background: #101317;
+  border: 1px solid #1f2933;
+  border-radius: 8px;
+  color: #e8f9ff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.3s ease;
+}
+input:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 8px #e5e5e5;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  margin-top: 10px;
+  background: linear-gradient(90deg, #d1d1d1, #4a4a4a);
+  border: none;
+  color: #fff;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: 0.3s ease;
+  letter-spacing: 1px;
+}
+button:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 10px #d0d0d0;
+}
+
+/* MESSAGE */
+#msg {
+  margin-top: 10px;
+  color: #ff5c5c;
+  min-height: 20px;
+  font-size: 0.9rem;
+}
+
+/* LINKS */
+a {
+  color: #dbdbdb;
+  text-decoration: none;
+  transition: 0.3s ease;
+  font-weight: 500;
+}
+a:hover {
+  text-shadow: 0 0 6px #e8e8e8;
+}
