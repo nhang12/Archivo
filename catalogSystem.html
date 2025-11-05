@@ -182,19 +182,29 @@
   window.location.href = "forum_test.html";
 };</script>
   
-  
+  <script>
+    requireAuth(); // protect page
+    const user = currentUser();
+    document.getElementById("userDisplay").textContent = "Logged in as " + user;
+    document.getElementById("name").textContent = user;
+    document.getElementById("logoutBtn").onclick = logout;
+  </script>
 
   <script src="auth.js"></script>
   <script>
     window.addEventListener("DOMContentLoaded", () => {
+      console.log("Auth script loaded");
       requireAuth();
-      const user = currentUser();
+      const user = currentUser();.
       document.getElementById("userDisplay").textContent = "Logged in as " + user;
+      document.getElementById("name").textContent = user;
       document.getElementById("logoutBtn").onclick = logout;
-      document.getElementById("manageBtn").onclick = () => {
-        window.location.href = "manage.html";
-      };
     });
   </script>
+  <script>
+  document.getElementById("manageBtn").onclick = () => {
+    window.location.href = "manage.html";
+  };
+</script>
 </body>
 </html>
