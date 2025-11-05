@@ -33,17 +33,47 @@
       object-fit: cover;
       border-radius: 6px;
     }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+      background: rgba(255,255,255,0.1);
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+    nav h1 {
+      font-size: 1.5rem;
+    }
     footer {
       margin-top: 20px;
       text-align: center;
       font-size: 0.85rem;
       color: #aaa;
     }
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background: #0077ff;
+      color: white;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body class="login-body" style="overflow-y:auto; align-items:flex-start;">
   <main class="login-card" style="margin: 40px auto; max-width: 1100px;">
     <h1 class="title">Game Database</h1>
+    
+    <section id="search-section" style="display:flex; gap:10px; margin-bottom:15px;">
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Search for a game, genre, or platform..." 
+        style="flex:1; padding:8px; border-radius:6px; border:none;"
+      >
+      <button id="searchBtn" class="btn">Search</button>
+    </section>
 
     <div id="filters">
       <label>Genre:
@@ -77,6 +107,7 @@
       </label>
 
       <button id="fetchBtn" class="btn">Fetch Games</button>
+      <button id="forumBtn" class="btn">Forum</button>
     </div>
 
     <div id="results">Loading games...</div>
@@ -84,12 +115,20 @@
     <footer>
       Data provided by <a href="https://rawg.io/" target="_blank">RAWG.io</a>
     </footer>
+
+    <nav>
+      <h1>Dashboard</h1>
+      <div>
+        <span id="userDisplay" style="margin-right:15px;"></span>
+        <button id="manageBtn" class="btn">Manage</button>
+        <button id="logoutBtn" class="btn">Logout</button>
+      </div>
+    </nav>
   </main>
 
   <script src="gameDatabase.js"></script>
   <script>
     const results = document.getElementById('results');
-
     async function displayGames(list) {
       if (!list.length) {
         results.innerHTML = '<p>No games found.</p>';
@@ -104,19 +143,58 @@
       `).join('');
     }
 
+    let allGames = [];
+
     document.getElementById('fetchBtn').onclick = async () => {
       const genre = document.getElementById('genreSelect').value;
       const year = document.getElementById('yearInput').value;
       const platform = document.getElementById('platformSelect').value;
-      const games = await fetchGames({ genre, year, platform });
-      displayGames(games);
+      allGames = await fetchGames({ genre, year, platform });
+      displayGames(allGames);
     };
 
-    // Load default range (1990-2005)
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+      if (query === '') {
+        displayGames(allGames);
+        return;
+      }
+      const filtered = allGames.filter(g =>
+        g.name.toLowerCase().includes(query) ||
+        (g.genres && g.genres.some(gen => gen.name.toLowerCase().includes(query))) ||
+        (g.platforms && g.platforms.some(p => p.platform.name.toLowerCase().includes(query)))
+      );
+      displayGames(filtered);
+    });
+
+    document.getElementById('searchInput').addEventListener('keypress', e => {
+      if (e.key === 'Enter') document.getElementById('searchBtn').click();
+    });
+
     (async () => {
-      const games = await fetchGames();
-      displayGames(games);
+      allGames = await fetchGames();
+      displayGames(allGames);
     })();
+  </script>
+  
+  <script src="forum_script.js"></script>
+  <script>document.getElementById("forumBtn").onclick = () => {
+  window.location.href = "forum_test.html";
+};</script>
+  
+  
+
+  <script src="auth.js"></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      requireAuth();
+      const user = currentUser();
+      document.getElementById("userDisplay").textContent = "Logged in as " + user;
+      document.getElementById("logoutBtn").onclick = logout;
+      document.getElementById("manageBtn").onclick = () => {
+        window.location.href = "manage.html";
+      };
+    });
   </script>
 </body>
 </html>

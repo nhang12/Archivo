@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum/Comment System Test Page</title>
+    <link rel="stylesheet" href="forum_style.css"> 
+</head>
+<body onload="checkLoginStatus()">
+    <div class="container">
+        <h1>💬 Comment System </h1>
+        
+
+        <section class="comment-form-section">
+            <h3>Post Your Comment</h3>
+            
+            <div id="login-status-area" class="input-group">
+            </div>
+            
+            <div class="input-group">
+                <label for="comment-text-area">Comment:</label>
+                <textarea id="comment-text-area" rows="4" placeholder="Write your comment here..." required></textarea>
+            </div>
+            
+            <button onclick="postNewComment()">Post Comment</button>
+        </section>
+
+        <hr>
+
+        <section class="comments-display-section">
+            <h2>Recent Comments</h2>
+            <div id="comments-list">
+            </div>
+        </section>
+    </div>
+
+    <script src="forum_script.js"></script> 
+</body>
+</html>
