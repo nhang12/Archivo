@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Archivo — Game Info</title>
+  <link rel="stylesheet" href="Styles.css" />
+  <style>
+    .game-info {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 20px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 10px;
+      color: #fff;
+    }
+    .game-info img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .back-btn {
+      background:#0077ff; color:white; padding:8px 16px; border:none;
+      border-radius:6px; cursor:pointer; margin-bottom:20px;
+    }
+  </style>
+</head>
+<body class="login-body">
+  <main class="game-info">
+    <button class="back-btn" onclick="history.back()">← Back</button>
+    <div id="content">Loading...</div>
+  </main>
+
+  <script src="auth.js"></script>
+  <script src="gameInfo.js"></script>
+</body>
+</html>

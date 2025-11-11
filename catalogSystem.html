@@ -135,7 +135,7 @@
         return;
       }
       results.innerHTML = list.map(g => `
-        <div class='game-card'>
+        <div class='game-card' onclick="window.location.href='gameInfo.html?id=${g.id}'">
           <img src='${g.background_image || ''}' alt='${g.name}'>
           <h3>${g.name}</h3>
           <p>${g.released || 'Unknown'}</p>
