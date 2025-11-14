@@ -1,38 +1,48 @@
 <!-- catalog.html -->
-<!-- Author: Yousif Mehsen -->
-<!-- Purpose: Demo site gameDatabase -->
+<!-- Author: Group Archivo -->
+<!-- Purpose: Game Catalog + Search -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Archivo — Game Catalog</title>
+
+  <!-- Your main styles -->
   <link rel="stylesheet" href="Styles.css" />
+
   <style>
+    /* Quick layout tweaks just for catalog */
     #filters {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 20px;
     }
+
     #results {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 16px;
     }
+
     .game-card {
       background: rgba(0,0,0,0.6);
       border-radius: 10px;
       padding: 10px;
       color: #fff;
       text-align: center;
+      cursor: pointer;
     }
+
     .game-card img {
       width: 100%;
       height: 180px;
       object-fit: cover;
       border-radius: 6px;
     }
+
     nav {
       display: flex;
       justify-content: space-between;
@@ -42,15 +52,18 @@
       padding: 10px 20px;
       border-radius: 8px;
     }
+
     nav h1 {
       font-size: 1.5rem;
     }
+
     footer {
       margin-top: 20px;
       text-align: center;
       font-size: 0.85rem;
       color: #aaa;
     }
+
     .btn {
       padding: 8px 16px;
       border: none;
@@ -61,10 +74,14 @@
     }
   </style>
 </head>
+
 <body class="login-body" style="overflow-y:auto; align-items:flex-start;">
+
   <main class="login-card" style="margin: 40px auto; max-width: 1100px;">
+
     <h1 class="title">Game Database</h1>
-    
+
+    <!-- Text search bar -->
     <section id="search-section" style="display:flex; gap:10px; margin-bottom:15px;">
       <input 
         type="text" 
@@ -75,6 +92,7 @@
       <button id="searchBtn" class="btn">Search</button>
     </section>
 
+    <!-- Filter controls -->
     <div id="filters">
       <label>Genre:
         <select id="genreSelect">
@@ -110,101 +128,156 @@
       <button id="forumBtn" class="btn">Forum</button>
     </div>
 
+    <!-- Catalog results -->
     <div id="results">Loading games...</div>
 
     <footer>
       Data provided by <a href="https://rawg.io/" target="_blank">RAWG.io</a>
     </footer>
 
+    <!-- Bottom nav / dashboard controls -->
     <nav>
-      <h1>Dashboard</h1>
+      <h1>Dashboard — <span id="name"></span></h1>
       <div>
         <span id="userDisplay" style="margin-right:15px;"></span>
         <button id="manageBtn" class="btn">Manage</button>
         <button id="logoutBtn" class="btn">Logout</button>
       </div>
     </nav>
+
   </main>
 
+  <!-- Load scripts that define functions FIRST -->
+  <script src="auth.js"></script>
   <script src="gameDatabase.js"></script>
+
   <script>
-    const results = document.getElementById('results');
-    async function displayGames(list) {
-      if (!list.length) {
-        results.innerHTML = '<p>No games found.</p>';
+    // --------- AUTH STUFF ---------
+    window.addEventListener("DOMContentLoaded", () => {
+      console.log("Auth + catalog loaded");
+
+      // Make sure user is logged in
+      requireAuth();
+
+      const user = currentUser();
+      // Show "Logged in as" and name in dashboard
+      document.getElementById("userDisplay").textContent = "Logged in as " + user;
+      document.getElementById("name").textContent = user;
+      document.getElementById("logoutBtn").onclick = logout;
+
+      // Nav buttons
+      document.getElementById("forumBtn").onclick = () => {
+        window.location.href = "forum_test.html";
+      };
+
+      document.getElementById("manageBtn").onclick = () => {
+        window.location.href = "manage.html";
+      };
+    });
+  </script>
+
+  <script>
+    // --------- GAME SEARCH + FILTER LOGIC ---------
+
+    const resultsDiv   = document.getElementById('results');
+    const searchInput  = document.getElementById('searchInput');
+    const searchBtn    = document.getElementById('searchBtn');
+    const fetchBtn     = document.getElementById('fetchBtn');
+    const genreSelect  = document.getElementById('genreSelect');
+    const yearInput    = document.getElementById('yearInput');
+    const platformSelect = document.getElementById('platformSelect');
+
+    let allGames = [];
+
+    // Helper: render game cards
+    function displayGames(list) {
+      if (!list || !list.length) {
+        resultsDiv.innerHTML = '<p>No games found.</p>';
         return;
       }
-      results.innerHTML = list.map(g => `
-        <div class='game-card' onclick="window.location.href='gameInfo.html?id=${g.id}'">
-          <img src='${g.background_image || ''}' alt='${g.name}'>
+
+      resultsDiv.innerHTML = list.map(g => `
+        <div class="game-card" onclick="window.location.href='gameInfo.html?id=${g.id}'">
+          <img src="${g.background_image || 'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'}"
+               alt="${g.name}">
           <h3>${g.name}</h3>
-          <p>${g.released || 'Unknown'}</p>
+          <p><strong>Released:</strong> ${g.released || 'Unknown'}</p>
+          <p><strong>Rating:</strong> ${g.rating ? g.rating.toFixed(1) : 'No rating'}</p>
         </div>
       `).join('');
     }
 
-    let allGames = [];
+    // Detect genre / platform / year from a free-text query
+    function analyzeQuery(query) {
+      const genres = ["action", "shooter", "rpg", "racing", "sports", "adventure", "horror"];
+      const platforms = ["pc", "ps2", "ps3", "ps4", "ps5", "xbox", "switch", "nintendo"];
 
-    document.getElementById('fetchBtn').onclick = async () => {
-      const genre = document.getElementById('genreSelect').value;
-      const year = document.getElementById('yearInput').value;
-      const platform = document.getElementById('platformSelect').value;
-      allGames = await fetchGames({ genre, year, platform });
-      displayGames(allGames);
-    };
+      const yearMatch = query.match(/\b(19|20)\d{2}\b/);
+      const year = yearMatch ? yearMatch[0] : null;
 
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const query = document.getElementById('searchInput').value.trim().toLowerCase();
-      if (query === '') {
+      const foundGenre    = genres.find(g => query.includes(g));
+      const foundPlatform = platforms.find(p => query.includes(p));
+
+      return { genre: foundGenre, platform: foundPlatform, year };
+    }
+
+    // Search button handler (free-text search)
+    async function searchGames() {
+      const query = searchInput.value.trim().toLowerCase();
+
+      if (query === "") {
+        // If empty search, just show whatever is loaded
         displayGames(allGames);
         return;
       }
-      const filtered = allGames.filter(g =>
-        g.name.toLowerCase().includes(query) ||
-        (g.genres && g.genres.some(gen => gen.name.toLowerCase().includes(query))) ||
+
+      resultsDiv.innerHTML = "<p style='color:#00aaff;'>Searching the Archivo database...</p>";
+
+      // Try to auto-detect filters from what the user typed
+      const { genre, platform, year } = analyzeQuery(query);
+
+      // Fetch fresh list from API based on detected filters
+      const games = await fetchGames({ genre, platform, year });
+
+      // Then also do a keyword match on the results
+      const filtered = games.filter(g =>
+        (g.name && g.name.toLowerCase().includes(query)) ||
+        (g.genres && g.genres.some(tag => tag.name.toLowerCase().includes(query))) ||
         (g.platforms && g.platforms.some(p => p.platform.name.toLowerCase().includes(query)))
       );
+
       displayGames(filtered);
-    });
+    }
 
-    document.getElementById('searchInput').addEventListener('keypress', e => {
-      if (e.key === 'Enter') document.getElementById('searchBtn').click();
-    });
+    // Fetch button handler (using explicit dropdown filters)
+    fetchBtn.addEventListener("click", async () => {
+      const genre    = genreSelect.value;
+      const year     = yearInput.value;
+      const platform = platformSelect.value;
 
-    (async () => {
-      allGames = await fetchGames();
+      resultsDiv.innerHTML = "<p style='color:#00aaff;'>Fetching games...</p>";
+
+      allGames = await fetchGames({ genre, year, platform });
       displayGames(allGames);
+    });
+
+    // Wire up search button + Enter key
+    searchBtn.addEventListener("click", searchGames);
+    searchInput.addEventListener("keypress", e => {
+      if (e.key === "Enter") searchGames();
+    });
+
+    // Initial load: just grab some games with default params
+    (async () => {
+      try {
+        allGames = await fetchGames();
+        displayGames(allGames);
+      } catch (err) {
+        console.error(err);
+        resultsDiv.innerHTML = "<p>Failed to load games.</p>";
+      }
     })();
   </script>
-  
-  <script src="forum_script.js"></script>
-  <script>document.getElementById("forumBtn").onclick = () => {
-  window.location.href = "forum_test.html";
-};</script>
-  
-  <script>
-    requireAuth(); // protect page
-    const user = currentUser();
-    document.getElementById("userDisplay").textContent = "Logged in as " + user;
-    document.getElementById("name").textContent = user;
-    document.getElementById("logoutBtn").onclick = logout;
-  </script>
 
-  <script src="auth.js"></script>
-  <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      console.log("Auth script loaded");
-      requireAuth();
-      const user = currentUser();.
-      document.getElementById("userDisplay").textContent = "Logged in as " + user;
-      document.getElementById("name").textContent = user;
-      document.getElementById("logoutBtn").onclick = logout;
-    });
-  </script>
-  <script>
-  document.getElementById("manageBtn").onclick = () => {
-    window.location.href = "manage.html";
-  };
-</script>
 </body>
 </html>

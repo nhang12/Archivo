@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Archivo — Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      color: #fff;
+    }
+    nav {
+      background: #1e1e1e;
+      padding: 1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    button {
+      background-color: #0088ff;
+      color: white;
+      border: none;
+      padding: 0.5em 1em;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    #search-section {
+      padding: 1em;
+      text-align: center;
+    }
+    #searchInput {
+      padding: 0.5em;
+      width: 250px;
+      border-radius: 4px;
+      border: none;
+    }
+    #results {
+      padding: 2em;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2em;
+    }
+    .game-card {
+      background-color: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .game-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(0, 136, 255, 0.5);
+    }
+    .game-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-bottom: 2px solid #0088ff;
+    }
+    .game-info {
+      padding: 1em;
+    }
+    .game-info h3 {
+      font-size: 1.1em;
+      margin-bottom: 0.5em;
+      color: #00aaff;
+    }
+    .game-info p {
+      margin: 0.3em 0;
+      color: #ccc;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <h1>Dashboard</h1>
+    <span id="userDisplay"></span>
+    <button id="logoutBtn">Logout</button>
+  </nav>
+
+  <main>
+    <h2>Welcome to your Game Catalog, <span id="name"></span>!</h2>
+    <p>This is your personalized dashboard.</p>  
+  </main>
+  
+  <section id="search-section">
+    <input type="text" id="searchInput" placeholder="Search for a game, genre, etc.">
+    <button id="searchBtn">Search</button>
+    <div id="results"></div>
+  </section>
+
+  <script src="auth.js"></script>
+  <script src="gameDatabase.js"></script>
+
+  <script>
+    //Auth system
+    requireAuth();
+    const user = currentUser();
+    document.getElementById("userDisplay").textContent = "Logged in as " + user;
+    document.getElementById("name").textContent = user;
+    document.getElementById("logoutBtn").onclick = logout;
+
+    //DOM
+    const searchInput = document.getElementById("searchInput");
+    const searchBtn = document.getElementById("searchBtn");
+    const resultsDiv = document.getElementById("results");
+
+    //Detects genre, platform, year keywords
+    function analyzeQuery(query) {
+      const genres = ["action", "shooter", "rpg", "racing", "sports", "adventure", "horror"];
+      const platforms = ["pc", "ps2", "ps3", "ps4", "ps5", "xbox", "switch", "nintendo"];
+      const yearMatch = query.match(/\b(19|20)\d{2}\b/);
+      const year = yearMatch ? yearMatch[0] : null;
+
+      const foundGenre = genres.find(g => query.includes(g));
+      const foundPlatform = platforms.find(p => query.includes(p));
+      return { genre: foundGenre, platform: foundPlatform, year };
+    }
+
+    //search handler
+    async function searchGames() {
+      const query = searchInput.value.trim().toLowerCase();
+      resultsDiv.innerHTML = "";
+
+      if (query === "") {
+        resultsDiv.innerHTML = "<p>Please enter something to search.</p>";
+        return;
+      }
+
+      //Show loading message
+      resultsDiv.innerHTML = "<p style='color:#00aaff;'>Searching the Archivo database...</p>";
+
+      //Analyze user query
+      const { genre, platform, year } = analyzeQuery(query);
+
+      //Fetch data from gameDatabase.js
+      const games = await fetchGames({ genre, platform, year });
+
+      //Keyword filter
+      const filtered = games.filter(g =>
+        (g.name && g.name.toLowerCase().includes(query)) ||
+        (g.genres && g.genres.some(tag => tag.name.toLowerCase().includes(query))) ||
+        (g.platforms && g.platforms.some(p => p.platform.name.toLowerCase().includes(query)))
+      );
+
+      //Clear loading message
+      resultsDiv.innerHTML = "";
+
+      //Display results as catalog cards
+      if (filtered.length > 0) {
+        filtered.forEach(game => {
+          const card = document.createElement("div");
+          card.className = "game-card";
+          card.innerHTML = `
+            <img src="${game.background_image || 'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'}"
+                 alt="${game.name}">
+            <div class="game-info">
+              <h3>${game.name}</h3>
+              <p><strong>Released:</strong> ${game.released || "N/A"}</p>
+              <p><strong>Rating:</strong> ${game.rating ? game.rating.toFixed(1) : "No rating"}</p>
+              <p><strong>Genres:</strong> ${game.genres && game.genres.length > 0
+                ? game.genres.map(g => g.name).join(", ")
+                : "Unknown"}</p>
+              <p><strong>Platforms:</strong> ${game.platforms
+                ? game.platforms.map(p => p.platform.name).join(", ")
+                : "N/A"}</p>
+            </div>
+          `;
+          resultsDiv.appendChild(card);
+        });
+      } else {
+        resultsDiv.innerHTML = "<p>No results found. Try again.</p>";
+      }
+    }
+
+    searchBtn.addEventListener("click", searchGames);
+    searchInput.addEventListener("keypress", e => {
+      if (e.key === "Enter") searchGames();
+    });
+  </script>
+</body>
+</html>
