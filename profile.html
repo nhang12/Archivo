@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Profile — The Archivo</title>
+  <link rel="stylesheet" href="Styles.css">
+  <link rel="stylesheet" href="profile.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="login-body">
+
+  <main class="profile-card">
+    <h1>Your Profile</h1>
+
+    <p><strong>Username:</strong> <span id="profileUsername"></span></p>
+
+    <label>Display Name:</label>
+    <input id="displayNameInput">
+
+    <label>Bio:</label>
+    <textarea id="bioInput"></textarea>
+
+    <label>Favorite Platform:</label>
+    <select id="platformInput">
+      <option value="">Choose one</option>
+      <option>PlayStation 2</option>
+      <option>PlayStation 3</option>
+      <option>PC</option>
+      <option>Wii</option>
+      <option>Game Boy Advance</option>
+    </select>
+
+    <label>Favorite Genre:</label>
+    <select id="genreInput">
+      <option value="">Choose one</option>
+      <option>Action</option>
+      <option>Adventure</option>
+      <option>RPG</option>
+      <option>Shooter</option>
+    </select>
+
+    <button id="saveProfileBtn">Save Profile</button>
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+
+    <p id="saveMsg"></p>
+  </main>
+
+  <script src="auth.js"></script>
+  <script src="profile.js"></script>
+
+</body>
+</html>

@@ -145,3 +145,25 @@ a:hover {
   width: 90%;
   max-width: 1100px;
 }
+
+.profile-float {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(15, 18, 22, 0.85);
+  color: white;
+  padding: 10px 18px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  font-family: "Orbitron", sans-serif;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: 0.3s ease;
+  z-index: 999;
+}
+
+.profile-float:hover {
+  box-shadow: 0 0 12px rgba(255,255,255,0.3);
+  filter: brightness(1.2);
+}
+
