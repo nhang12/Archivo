@@ -133,6 +133,23 @@ button:hover {
     font-size: 14px;
 }
 
+.report-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 10px;
+    transition: all 0.2s ease;
+    background-color: rgba(255, 107, 107, 0.1);
+    border-radius: 4px;
+}
+
+.report-btn:hover {
+    background-color: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+}
+
 
 .reply-form {
     margin-top: 15px;
