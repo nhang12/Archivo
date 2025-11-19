@@ -69,3 +69,44 @@ if (loginForm) {
     }
   });
 }
+
+const SAVED_KEY = "archivo.savedGames";
+
+function loadSaved() {
+  return JSON.parse(localStorage.getItem(SAVED_KEY) || "{}");
+}
+
+function saveSaved(obj) {
+  localStorage.setItem(SAVED_KEY, JSON.stringify(obj));
+}
+
+function saveGame(id, name, img) {
+  const user = currentUser();
+  if (!user) return alert("Please log in first.");
+
+  let saved = loadSaved();
+  if (!saved[user]) saved[user] = [];
+
+  // Prevent duplicates
+  if (saved[user].some(g => g.id === id)) {
+    alert(`"${name}" is already saved.`);
+    return;
+  }
+
+  saved[user].push({ id, name, img });
+  saveSaved(saved);
+
+  alert(`Saved "${name}"`);
+}
+
+function loadProfiles() {
+  return JSON.parse(localStorage.getItem("archivo.profiles") || "{}");
+}
+
+function getDisplayName(username) {
+  const profiles = loadProfiles();
+  if (profiles[username] && profiles[username].displayName.trim() !== "") {
+    return profiles[username].displayName;
+  }
+  return username; // fallback
+}
