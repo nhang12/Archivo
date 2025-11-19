@@ -167,3 +167,37 @@ a:hover {
   filter: brightness(1.2);
 }
 
+.save-btn {
+  margin-top: 8px;
+  background: #009cff;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  font-family: "Orbitron", sans-serif;
+  transition: 0.3s ease;
+}
+
+.save-btn:hover {
+  background: #00b4ff;
+  box-shadow: 0 0 10px rgba(0, 180, 255, 0.5);
+}
+
+.page-btn {
+  background: #1a1f27;
+  color: white;
+  border: 1px solid #2b3644;
+  padding: 8px 14px;
+  margin: 0 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: "Orbitron", sans-serif;
+  transition: 0.3s ease;
+}
+
+.page-btn:hover {
+  background: #00aaff;
+  box-shadow: 0 0 10px rgba(0, 170, 255, 0.6);
+}

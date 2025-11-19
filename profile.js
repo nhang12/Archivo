@@ -49,3 +49,23 @@ document.getElementById("saveProfileBtn").onclick = () => {
   document.getElementById("saveMsg").textContent = "Profile Saved!";
   setTimeout(() => (document.getElementById("saveMsg").textContent = ""), 2000);
 };
+
+function loadSavedGamesToProfile() {
+  const user = currentUser();
+  const saved = loadSaved();
+  const container = document.getElementById("savedGamesContainer");
+
+  if (!saved[user] || saved[user].length === 0) {
+    container.innerHTML = "<p>No saved games.</p>";
+    return;
+  }
+
+  container.innerHTML = saved[user].map(g => `
+    <div class="saved-game">
+      <img src="${g.img}">
+      <p>${g.name}</p>
+    </div>
+  `).join('');
+}
+
+loadSavedGamesToProfile();

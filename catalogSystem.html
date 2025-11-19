@@ -11,6 +11,8 @@
 
   <!-- Your main styles -->
   <link rel="stylesheet" href="Styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+
 
   <style>
     /* Quick layout tweaks just for catalog */
@@ -135,6 +137,13 @@
     <div id="results">Loading games...</div>
 
     <footer>
+      <div id="pagination" style="margin: 20px 0; text-align:center;">
+  <button class="page-btn" data-page="1">1</button>
+  <button class="page-btn" data-page="2">2</button>
+  <button class="page-btn" data-page="3">3</button>
+  <button class="page-btn" data-page="4">4</button>
+  <button class="page-btn" data-page="5">5</button>
+</div>
       Data provided by <a href="https://rawg.io/" target="_blank">RAWG.io</a>
     </footer>
 
@@ -142,6 +151,7 @@
     <nav>
       <h1>Dashboard — <span id="name"></span></h1>
       <div>
+        
         <span id="userDisplay" style="margin-right:15px;"></span>
         <button id="manageBtn" class="btn">Manage</button>
         <button id="logoutBtn" class="btn">Logout</button>
@@ -165,7 +175,10 @@
       const user = currentUser();
       // Show "Logged in as" and name in dashboard
       document.getElementById("userDisplay").textContent = "Logged in as " + user;
-      document.getElementById("name").textContent = user;
+      const displayName = getDisplayName(user);
+      document.getElementById("name").textContent = displayName;
+      document.getElementById("userDisplay").textContent = "Logged in as " + displayName;
+
       document.getElementById("logoutBtn").onclick = logout;
 
       // Nav buttons
@@ -194,21 +207,26 @@
 
     // Helper: render game cards
     function displayGames(list) {
-      if (!list || !list.length) {
-        resultsDiv.innerHTML = '<p>No games found.</p>';
-        return;
-      }
+  const results = document.getElementById("results");
 
-      resultsDiv.innerHTML = list.map(g => `
-        <div class="game-card" onclick="window.location.href='gameInfo.html?id=${g.id}'">
-          <img src="${g.background_image || 'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'}"
-               alt="${g.name}">
-          <h3>${g.name}</h3>
-          <p><strong>Released:</strong> ${g.released || 'Unknown'}</p>
-          <p><strong>Rating:</strong> ${g.rating ? g.rating.toFixed(1) : 'No rating'}</p>
-        </div>
-      `).join('');
-    }
+  if (!list || !list.length) {
+    results.innerHTML = "<p>No games found.</p>";
+    return;
+  }
+
+  results.innerHTML = list.map(g => `
+    <div class='game-card' onclick="window.location.href='gameInfo.html?id=${g.id}'">
+      <img src='${g.background_image || ''}' alt='${g.name}'>
+      <h3>${g.name}</h3>
+      <p>${g.released || 'Unknown'}</p>
+
+      <button class="save-btn"
+        onclick="event.stopPropagation(); saveGame(${g.id}, '${g.name.replace(/'/g, "\\'")}', '${g.background_image || ''}')">
+        ★ Save
+      </button>
+    </div>
+  `).join('');
+}
 
     // Detect genre / platform / year from a free-text query
     function analyzeQuery(query) {
@@ -280,6 +298,24 @@
         resultsDiv.innerHTML = "<p>Failed to load games.</p>";
       }
     })();
+    
+    document.querySelectorAll(".page-btn").forEach(btn => {
+  btn.addEventListener("click", async (e) => {
+    const page = e.target.dataset.page;
+
+    resultsDiv.innerHTML = "<p style='color:#00aaff;'>Loading page " + page + "...</p>";
+
+    allGames = await fetchGames({
+      genre: genreSelect.value,
+      platform: platformSelect.value,
+      year: yearInput.value,
+      page: page
+    });
+
+    displayGames(allGames);
+  });
+});
+
   </script>
 
 </body>

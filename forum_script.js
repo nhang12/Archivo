@@ -1,7 +1,6 @@
 
 const SESSION_KEY = "archivo.session";
 const COMMENTS_KEY = "archivo.comments";
-const REPORTED_KEY = "archivo.reported";
 
 function getLoggedInUser() {
     const username = sessionStorage.getItem(SESSION_KEY);
@@ -27,40 +26,6 @@ function saveCommentsToStorage(comments) {
 function loadCommentsFromStorage() {
     const stored = localStorage.getItem(COMMENTS_KEY);
     return stored ? JSON.parse(stored) : [];
-}
-
-// Get reported comments for current user
-function getReportedComments() {
-    const stored = localStorage.getItem(REPORTED_KEY);
-    return stored ? JSON.parse(stored) : [];
-}
-
-// Save reported comments
-function saveReportedComments(reported) {
-    localStorage.setItem(REPORTED_KEY, JSON.stringify(reported));
-}
-
-// Check if a comment is reported
-function isCommentReported(commentId) {
-    const reported = getReportedComments();
-    return reported.includes(commentId);
-}
-
-// Report a comment
-function reportComment(commentId) {
-    const reported = getReportedComments();
-    if (!reported.includes(commentId)) {
-        reported.push(commentId);
-        saveReportedComments(reported);
-        
-        // Hide the comment immediately
-        const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
-        if (commentElement) {
-            commentElement.style.display = 'none';
-        }
-        
-        alert("Comment has been reported and hidden.");
-    }
 }
 
 
@@ -288,7 +253,6 @@ function createCommentElement(commentId, username, commentText, timestamp, isRep
         <button class="like-btn" onclick="toggleLike('${commentId}')">♡</button>
         <span class="like-count">${likes}</span>
         <button class="reply-btn" onclick="showReplyForm('${commentId}')">Reply</button>
-        <button class="report-btn" onclick="reportComment('${commentId}')">Report</button>
     `;
 
     metaDiv.appendChild(userSpan);
@@ -307,7 +271,7 @@ function loadAndDisplayComments() {
     
     commentsList.innerHTML = ''; // Clear existing comments
     
-    // Display comments 
+    // Display comments in reverse order (newest first)
     for (let i = comments.length - 1; i >= 0; i--) {
         const commentData = comments[i];
         const commentElement = createCommentElement(
@@ -319,12 +283,7 @@ function loadAndDisplayComments() {
             commentData.likes || 0
         );
         
-        // Hide if reported
-        if (isCommentReported(commentData.id)) {
-            commentElement.style.display = 'none';
-        }
-        
-        //  replies 
+        // Add replies if they exist
         if (commentData.replies && commentData.replies.length > 0) {
             const repliesContainer = document.createElement('div');
             repliesContainer.className = 'replies-container';
@@ -338,12 +297,6 @@ function loadAndDisplayComments() {
                     true,
                     reply.likes || 0
                 );
-                
-                // Hide reply if reported
-                if (isCommentReported(reply.id)) {
-                    replyElement.style.display = 'none';
-                }
-                
                 repliesContainer.appendChild(replyElement);
             });
             
@@ -389,7 +342,7 @@ function postNewComment() {
         replies: []
     };
 
-    //  local
+    //  localStorage
     const comments = loadCommentsFromStorage();
     comments.push(commentData);
     saveCommentsToStorage(comments);

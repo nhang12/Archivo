@@ -38,3 +38,4 @@ async function fetchGameInfo(id) {
     <p style="margin-top:15px;">${game.description_raw || "No description available."}</p>
   `;
 })();
+
