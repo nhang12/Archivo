@@ -1,5 +1,5 @@
 body {
-    font-family: 'Orbitron', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: url("wave.gif") center center / cover no-repeat fixed;
     color: #ffffff;
     line-height: 1.6;
@@ -131,6 +131,23 @@ button:hover {
 .like-count {
     color: #aaa;
     font-size: 14px;
+}
+
+.report-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 10px;
+    transition: all 0.2s ease;
+    background-color: rgba(255, 107, 107, 0.1);
+    border-radius: 4px;
+}
+
+.report-btn:hover {
+    background-color: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
 }
 
 
