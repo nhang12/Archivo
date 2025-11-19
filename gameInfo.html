@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Archivo — Game Info</title>
   <link rel="stylesheet" href="Styles.css" />
+
   <style>
     .game-info {
       max-width: 900px;
@@ -14,28 +15,57 @@
       border-radius: 10px;
       color: #fff;
     }
-    .game-info img {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
     .back-btn {
-      background:#0077ff; color:white; padding:8px 16px; border:none;
-      border-radius:6px; cursor:pointer; margin-bottom:20px;
-    }
+    position: relative;
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+  }
+
+  .game-info {
+    position: relative;
+    z-index: 9999 !important;
+  }
+    .back-btn {
+  background: linear-gradient(90deg, #0077ff, #0055cc);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: "Orbitron", sans-serif;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 120, 255, 0.4);
+}
+
+.back-btn:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 14px rgba(0, 150, 255, 0.6);
+}
+
   </style>
+  
 </head>
+
 <body class="login-body">
   <main class="game-info">
-    <button class="back-btn" onclick="history.back()">← Back</button>
+    <button class="back-btn" onclick="goBack()">← Back</button>
+
     <div id="content">Loading...</div>
-    <button class="save-btn" onclick="saveGame(${g.id}, '${g.name}', '${g.background_image}')">
-  Save
-</button>
-    
   </main>
 
   <script src="auth.js"></script>
   <script src="gameInfo.js"></script>
+
+  <script>
+  function goBack() {
+    if (document.referrer && document.referrer.includes("catalog")) {
+      window.history.back();
+    } else {
+      window.location.href = "catalog.html";
+    }
+  }
+  </script>
+
 </body>
 </html>

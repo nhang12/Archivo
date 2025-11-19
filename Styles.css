@@ -82,6 +82,10 @@
   flex-wrap: wrap;
 }
 
+.login-body {
+  align-items: flex-start !important;
+}
+
 .input {
   flex: 1 1 30%;
   min-width: 160px;
